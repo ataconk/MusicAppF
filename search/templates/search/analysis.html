@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+
+    <title>Album Analysis</title>
+</head>
+<body id="bg">
+    <div class="container-fluid" align="center">
+        <div class="col-md-10 col-md-offset-1">
+            <p class="brandname">MOODIFIER</p>
+        </div>
+    </div>
+    <div class="container-fluid" style="background-color: #1f1f1f; margin-top: 30px">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row">
+                <div class="col-md-5">
+                    <img src="{{ album.images.1.url }}" style="height: 300px; width: 300px; margin-top: 50px; margin-bottom: 50px;">
+                </div>
+                <div class="col-md-5" style="margin-top: 130px; color: white">
+                    <h2>Album Analysis of</h2>
+                    <h2>'{{ album.name }}' by {{ album.artists.0.name }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" align="center">
+        <div class="col-md-6 col-md-offset-1" style="margin-top: 40px" align="left">
+            <h3></h3>
+            <ol>
+            {% for row in album_info.data %}
+             <li>
+                 <h4>
+                     <a href="https://open.spotify.com/track/{{ row.2 }}" target="_blank" style="margin-right: 20px">
+                        <img src="{% static '/images/spotify-clip.png' %}" style="height: 27px">
+                     </a>
+                     {{ row.0 }}
+
+                 </h4>
+
+             </li>
+            {% endfor %}
+            </ol>
+        </div>
+        <div class="col-md-4" id="explanation">
+            <br>
+            <p><i>Each song in the album is categorized as
+                'Happy', 'Sad', 'Calm' or 'Angry' according to
+                their valence, lyrics, energy and danceability.
+            </i></p>
+            <p><b>You can see the results below.</b></p>
+        </div>
+
+
+
+    </div>
+    <div style="margin-top: 40px">
+
+
+
+    </div>
+    <div id="myDiv" style="margin-top: 40px"></div>
+    <div id="barCharts" style="margin-top: 40px">
+        <div id="arousal"></div>
+        <div id="valence" style="margin-top: 40px"></div>
+    </div>
+
+<script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% block extrascripts %}
+<script>
+    $(document).ready(function () {
+        var song_data = [];
+        var song_x = [];
+        var song_y = [];
+
+        var barDataArousalX = [];
+        var barDataArousalY = [];
+
+        var barDataValenceX = [];
+        var barDataValenceY = [];
+
+        {% for row in album_info.data %}
+            song_data.push("{{ row.0 }}");
+            song_x.push({{ row.8 }});
+            song_y.push({{ row.5 }});
+
+            barDataArousalX.push("{{ row.0 }}");
+            barDataArousalY.push({{ row.5 }});
+
+            barDataValenceX.push("{{ row.0 }}");
+            barDataValenceY.push({{ row.8 }});
+        {% endfor %}
+
+        function createVariables(){
+            var traces = [];
+
+            for (var i = 0; i < song_data.length; ++i) {
+                traces[i] = {
+                  x: [song_x[i]],
+                  y: [song_y[i]],
+                  mode: 'markers',
+                  type: 'scatter',
+                  name: song_data[i],
+                  marker: { size: 12 }}
+            }
+            return traces
+        }
+        var data = createVariables();
+        var layout = {
+          xaxis: {
+            range: [-1, 1],
+            title: "Arousal",
+              dtick: 0.2
+          },
+          yaxis: {
+            range: [-1, 1],
+            title: "Valence"
+          },
+          title:'Emotion Analysis of Songs',
+          titlefont: {
+            "size": 36
+          },
+          annotations: [
+            {
+              x: -0.75,
+              y: 0.75,
+              xref: 'x',
+              yref: 'y',
+              text: '<b>ANGRY</b>',
+                font: {
+                size: 22,
+                color: '#a9020d'
+              },
+              showarrow: false,
+              arrowhead: 7,
+              ax: 0,
+              ay: -40
+            },
+            {
+              x: 0.75,
+              y: 0.75,
+              xref: 'x',
+              yref: 'y',
+              text: '<b>HAPPY</b>',
+                font: {
+                size: 22,
+                color: '#3db022'
+              },
+              showarrow: false,
+              arrowhead: 7,
+              ax: 0,
+              ay: -40
+            },
+            {
+              x: 0.75,
+              y: -0.75,
+              xref: 'x',
+              yref: 'y',
+              text: '<b>CALM</b>',
+                font: {
+                size: 22,
+                color: '#11afe9'
+              },
+              showarrow: false,
+              arrowhead: 7,
+              ax: 0,
+              ay: -40
+            },
+            {
+              x: -0.75,
+              y: -0.75,
+              xref: 'x',
+              yref: 'y',
+              text: '<b>SAD</b>',
+                font: {
+                size: 22,
+                color: '#747171'
+              },
+              showarrow: false,
+              arrowhead: 7,
+              ax: 0,
+              ay: -40
+            }
+          ]
+        };
+        Plotly.newPlot('myDiv', data, layout);
+
+        var barDataArousal = [{
+            x: barDataArousalX,
+            y: barDataArousalY,
+            type: "bar",
+            marker:{
+                color: '#e3b50a'
+            }
+        }];
+
+        var barChartArousalLayout = {
+            title: "Arousal"
+
+        };
+
+        Plotly.newPlot("arousal", barDataArousal, barChartArousalLayout);
+
+        var barDataValence = [{
+            x: barDataValenceX,
+            y: barDataValenceY,
+            type: "bar",
+            marker:{
+                color: '#a63de3'
+            }
+        }];
+
+        var barChartValenceLayout = {
+            title: "Valence"
+
+        };
+
+        Plotly.newPlot("valence", barDataValence, barChartValenceLayout)
+    });
+
+
+
+
+</script>
+{% endblock %}
+
+</body>
+</html>

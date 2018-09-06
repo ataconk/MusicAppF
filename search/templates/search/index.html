@@ -1,0 +1,97 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body id="bg">
+
+
+<div class="container-fluid" align="center">
+        <div class="col-md-10 col-md-offset-1">
+            <p class="brandname">MOODIFIER</p>
+            <p style="font-size: 24px">Moodifier provides emotion analysis for Turkish Songs using <b>Spotify</b> and <b>Genius</b></p>
+            <p style="font-size: 24px">Type an artist name to begin, then choose the album you wish to analyze</p>
+        </div>
+    </div>
+
+<div class="container-fluid" align="center" id="main">
+<form action="#artist" method="post" id="artistForm">
+    {% csrf_token %}
+
+
+        <div class="col-md-6 col-md-offset-3" align="center">
+            <div class="row">
+                {{ form.artistName }}
+            </div>
+            <div class="row">
+                <button type="submit" id="searchButton">
+                        SEARCH
+                </button>
+            </div>
+        </div>
+
+</form>
+</div>
+
+<section id="artist" style="margin-top: 40px;">
+    <div class="container-fluid" align="center" id="artist">
+    {% if artist %}
+
+        <div class="col-md-10 col-md-offset-1">
+            <div class="row">
+                <img src="{{ artist.images.1.url }}" style="border-radius: 50%">
+                <h1>{{ artist.name }}</h1>
+            </div>
+
+
+        </div>
+
+
+    {% elif artist == False %}
+        <h5>
+            "No artist found"
+        </h5>
+    {% endif %}
+    </div>
+</section>
+<section id="album_list" style="display: {{ albums_display }}">
+<div class="container-fluid" align="center">
+    {% if albums %}
+        <div class="col-md-4 col-md-offset-4">
+            <h2 style="margin-bottom: 20px">Albums of {{ artist.name }}</h2>
+        </div>
+        <div class="col-md-10 col-md-offset-1">
+
+            {% for album in albums %}
+                <div class="col-md-4" style="margin-bottom: 5px">
+                    <a href="http://127.0.0.1:8000/search/analysis?q={{ album.id }}">
+                      <img src="{{ album.images.1.url }}" style="height: 120px; width: 120px; border-radius: 10px;">
+                    </a>
+                    <p id="albumName" style=" margin-bottom: 20px;"><b>{{ album.name }}</b></p>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% elif albums == False %}
+        <h5 style="color: #fff;">
+            "No album found"
+        </h5>
+    {% endif %}
+</div>
+
+
+</section>
+<section>
+
+</section>
+<script type="text/javascript" src="{% static '/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static '/js/bootstrap.min.js' %}"></script>
+
+
+</body>
+</html>

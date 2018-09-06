@@ -1,0 +1,74 @@
+/*#imaginary_container{*/
+    /*margin-top:20%; !* Don't copy this *!*/
+/*}*/
+/*.stylish-input-group .input-group-addon{*/
+    /*background: white !important;*/
+/*}*/
+/*.stylish-input-group .form-control{*/
+	/*border-right:0;*/
+	/*box-shadow:0 0 0;*/
+	/*border-color:#ccc;*/
+/*}*/
+/*.stylish-input-group button{*/
+    /*border:0;*/
+    /*background:transparent;*/
+/*}*/
+@import 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700';
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:200');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Righteous');
+
+#bg {
+    background-color: #fff5ee;
+    font-family: 'Open Sans', sans-serif;
+}
+
+input[type=text]{
+    border-radius: 5px;
+    color: #333333;
+    width: 400px;
+    height: 40px;
+    border: 2px solid #003333;
+    font-size: large;
+    text-align: left;
+}
+
+#searchButton{
+    border: solid #003333;
+    color: white;
+    width: 150px;
+    height: 40px;
+    font-size: large;
+    border-radius: 10px;
+    background-color: #009688;
+    margin-top: 20px;
+}
+
+#main{
+    margin-top: 5%;
+}
+
+#albumName{
+    white-space: nowrap;
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#explanation{
+    font-family: 'Titillium Web', sans-serif;
+    font-size: 30px;
+    color: #fff5ee;
+    background-color: #1f1f1f;
+    margin-top: 40px;
+    height: 380px;
+    border-radius: 50px;
+}
+
+.brandname{
+    font-family: 'Righteous', cursive;
+    font-size: 70px;
+    background: -webkit-linear-gradient(#009688, #003333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
